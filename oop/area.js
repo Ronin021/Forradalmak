@@ -62,3 +62,71 @@ class Table extends Area {
         table.appendChild(tbody) // Hozzáadjuk a <tbody>-t a táblázathoz
     }
 }
+
+
+
+
+
+
+class Form extends Area { 
+    constructor(cssClass){ 
+        super(cssClass); // Meghívjuk az Area konstruktorát, létrehozva a divet
+
+        const form = document.createElement('form'); // Létrehozunk egy <form> elemet
+        this.div.appendChild(form); // A formot hozzáadjuk az örökölt divhez
+
+        const fieldList = [{ // Mezők leírása objektumok tömbjében
+            fieldid: 'forradalom', 
+            fieldLabel: 'forradalom'
+        },
+        {
+            fieldid: 'evszam', 
+            fieldLabel: 'evszám' 
+        },
+        {
+            fieldid: 'sikeres', 
+            fieldLabel: 'sikeres' 
+        }];
+        
+        for(const fieldElement of fieldList){ 
+            const field = makeDiv('field'); // Létrehozunk egy új mező-tartó divet
+            form.appendChild(field); // Hozzáadjuk a formhoz
+        
+            const label = document.createElement('label'); // Címke létrehozása
+            label.htmlFor = fieldElement.fieldid; // Összekötjük az inputtal
+            label.textContent = fieldElement.fieldLabel; // Beállítjuk a címkét
+            field.appendChild(label); 
+        
+            let input = document.createElement('input'); // Input létrehozása
+            input.id = fieldElement.fieldid; // Beállítjuk az id-t
+            field.appendChild(document.createElement('br')); // Sortörés
+        
+            if(fieldElement.fieldid === 'sikeres') { 
+                input = document.createElement('select'); // Legördülő lista
+                input.id = fieldElement.fieldid; 
+        
+                const optionyes = document.createElement('option'); // "igen" opció
+                optionyes.value = 'igen';
+                optionyes.innerText = 'igen';
+        
+                const optionno = document.createElement('option'); // "nem" opció
+                optionno.value = 'nem';
+                optionno.innerText = 'nem';
+        
+                input.appendChild(optionyes); // Hozzáadjuk az opciókat
+                input.appendChild(optionno);
+            }
+            else{ 
+                input = document.createElement('input'); // Szövegmező
+                input.id = fieldElement.fieldid; 
+            }
+
+            field.appendChild(input); // Hozzáadjuk a mezőt a field divhez
+        }
+        
+        const button = document.createElement('button') // Gomb létrehozása
+        button.textContent = 'hozzáadás'; // Gomb felirata
+        form.appendChild(button); // Hozzáadjuk a formhoz
+    }
+}
+
