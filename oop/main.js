@@ -7,5 +7,17 @@ document.body.appendChild(sep)
 // Létrehozunk egy új 'table' class nevű divet az Table osztály segítségével
 const table = new Table('table')
 
-// Létrehozunk egy új 'form' class nevű divet ugyanabba a containerbe
-const form = new Area('form')
+const fieldsList = [{ // egy tömb objektumokkal
+    fieldid: 'forradalom', // ez lesz az input id-ja
+    fieldLabel: 'forradalom' // labelszöveg
+},
+{
+    fieldid: 'evszam', // második mező id
+    fieldLabel: 'evszám' // második mező felirat
+},
+{
+    fieldid: 'sikeres', // harmadik mező id
+    fieldLabel: 'sikeres' // harmadik mező felirat
+}];
+
+const form = new Form('form', fieldsList); // példányosítjuk a Form osztályt, 'form' class-szal
