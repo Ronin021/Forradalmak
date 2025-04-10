@@ -10,12 +10,21 @@ class Area {
 
     #div // Privát mező: ide kerül a létrehozott div elem
 
+    #manager // Privát mező: ide kerül a Manager példány
+
+    get manager() {
+        return this.#manager // Getter: visszaadja a manager példányt
+    }
+
     // Getter: kívülről elérhetővé teszi a privát div-et
     get div(){
         return this.#div
     }
 
-    constructor(className) {
+
+
+    constructor(className, manager) {
+        this.#manager = manager // Beállítjuk a manager példányt
         const container = this.#getContainerdiv() // Lekérjük vagy létrehozzuk a közös konténert
 
         this.#div = document.createElement('div') // Új div létrehozása
@@ -41,9 +50,30 @@ class Area {
 // Table osztály: örökli az Area-t, és létrehoz benne egy táblázatot fejléccel és tbody-val
 class Table extends Area {
 
-    constructor(cssClass){
-        super(cssClass) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
+    constructor(cssClass, manager) {
+        super(cssClass, manager) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
+        const tabla = this.#makeTable() // privát metodus meghívása, ami létrehozza a táblázatot
+                
+        this.manager.setAddAdatCallback((adat) => { // Callback beállítása, amit új adat hozzáadásakor hívunk meg
+            const row = document.createElement('tr') // Új sor létrehozása
+            tabla.appendChild(row) // Hozzáadjuk a tbodyhoz
+            const forradalomcell = document.createElement('td') // Új cella létrehozása
+            forradalomcell.textContent = adat.forradalom // Beállítjuk a cella szövegét
 
+            row.appendChild(forradalomcell) // Hozzáadjuk a sorhoz
+            
+            
+            const evszamcell = document.createElement('td') // Új cella létrehozása
+            evszamcell.textContent = adat.evszam // Beállítjuk a cella szövegét
+            row.appendChild(evszamcell) // Hozzáadjuk a sorhoz
+
+            const sikerescella = document.createElement('td') // Új cella létrehozása
+            sikerescella.textContent = adat.sikeres // Beállítjuk a cella szövegét
+            row.appendChild(sikerescella) // Hozzáadjuk a sorhoz
+        })
+    }
+
+#makeTable() { // Privát metódus: létrehozza a táblázatot
         const table = document.createElement('table') // Létrehozunk egy <table> elemet
         this.div.appendChild(table) // Hozzáadjuk a div-hez
 
@@ -65,13 +95,16 @@ class Table extends Area {
         table.appendChild(tbody) // Hozzáadjuk a táblázathoz
 
         this.tbody = tbody // Mentjük példányváltozóként, ha később használni akarjuk
-    }
+
+        return tbody // Visszaadjuk a törzset
+}
 }
 
 // Form osztály: örökli az Area-t, létrehoz egy űrlapot a megadott mezőkkel
 class Form extends Area {
-    constructor(cssClass, fieldList){
-        super(cssClass) // Meghívjuk az Area konstruktorát
+    constructor(cssClass, fieldList, manager) {
+        super(cssClass, manager, fieldList) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
+        
 
         const form = document.createElement('form') // Űrlap elem létrehozása
         this.div.appendChild(form) // Hozzáadjuk a divhez
@@ -123,5 +156,20 @@ class Form extends Area {
         const button = document.createElement('button') // Gomb létrehozása
         button.textContent = 'hozzáadás' // Felirat beállítása
         form.appendChild(button) // Gomb hozzáadása az űrlaphoz
+
+
+        form.addEventListener('submit', (e) => { // Űrlap beküldés eseménykezelő
+            e.preventDefault() // Alapértelmezett beküldés megakadályozása
+            const valueObject = {} // Üres objektum létrehozása az értékek tárolására
+
+            const inputField = e.target.querySelectorAll('input, select') // Kiválasztjuk az összes input és select mezőt
+            for (const input of inputField) { // Végigmegyünk az összes mezőn
+                valueObject[input.id] = input.value // Az objektumba mentjük az értékeket
+            }
+
+            const adat = new Adat(valueObject.forradalom, valueObject.evszam, valueObject.sikeres) // Új Adat objektum létrehozása
+            this.manager.addAdat(adat) // Adat hozzáadása a Managerhez
+            
+        })
     }
 }
