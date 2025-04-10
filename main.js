@@ -1,3 +1,5 @@
+const array = [] // létrehozok egy tömböt
+
 // Egy segédfüggvény, ami létrehoz egy <div> elemet a megadott class névvel
 const makeDiv = (className) => {
     const div = document.createElement('div') // Létrehozunk egy új <div> elemet
@@ -51,7 +53,6 @@ const tbody = document.createElement('tbody')
 // A <tbody>-t hozzáadjuk a táblázathoz
 table.appendChild(tbody)
 
-
 // Létrehozunk egy 'form' class nevű divet
 const divform = makeDiv('form')
 
@@ -62,18 +63,11 @@ const form = document.createElement('form')
 divform.appendChild(form)
 
 // Mezőket leíró tömb: minden mező egy objektum (id + címke szöveg)
-const fieldList = [{
-    fieldid: 'forradalom',
-    fieldLabel: 'forradalom'
-},
-{
-    fieldid: 'evszam',
-    fieldLabel: 'evszám'
-},
-{
-    fieldid: 'sikeres',
-    fieldLabel: 'sikeres'
-}]
+const fieldList = [
+    { fieldid: 'forradalom', fieldLabel: 'forradalom' },
+    { fieldid: 'evszam', fieldLabel: 'evszám' },
+    { fieldid: 'sikeres', fieldLabel: 'sikeres' }
+]
 
 // Végigmegyünk minden mezőn
 for (const fieldElement of fieldList) {
@@ -85,10 +79,9 @@ for (const fieldElement of fieldList) {
     label.textContent = fieldElement.fieldLabel // A címke szövege
     field.appendChild(label) // Címkét hozzáadjuk a mezőhöz
 
-    let input = document.createElement('input') // Alapértelmezett input
-    input.id = fieldElement.fieldid // Beállítjuk az id-t
-
     field.appendChild(document.createElement('br')) // Sortörés a label és input közé
+
+    let input // Input változó deklarálása
 
     if (fieldElement.fieldid === 'sikeres') {
         input = document.createElement('select') // A "sikeres" mező legyen legördülő
@@ -112,9 +105,44 @@ for (const fieldElement of fieldList) {
     field.appendChild(input) // Hozzáadjuk az inputot a mezőhöz
 }
 
-const button = document.createElement('button') // Gomb létrehozása
-button.textContent = 'hozzáadás' // Gomb felirata
-form.appendChild(button) // Gomb hozzáadása az űrlaphoz
+// Gomb létrehozása és hozzáadása a formhoz
+const button = document.createElement('button')
+button.textContent = 'hozzáadás'
+form.appendChild(button)
+
+// Űrlap beküldés eseménykezelő
+form.addEventListener('submit', (e) => {
+    e.preventDefault() // Megakadályozzuk az alapértelmezett beküldést
+
+    const valueObject = {} // Itt tároljuk az input mezők értékeit
+
+    // Lekérjük az összes input és select mezőt
+    const inputField = e.target.querySelectorAll('input, select')
+
+    // Feltöltjük az objektumot a mezők id-jával és értékével
+    for (const inputFields of inputField) {
+        valueObject[inputFields.id] = inputFields.value
+    }
+
+    // Új sor létrehozása a táblázathoz
+    const tabelrow = document.createElement('tr')
+    tbody.appendChild(tabelrow)
+
+    // Forradalom cella létrehozása és hozzáadása
+    const forradalomCella = document.createElement('td')
+    forradalomCella.textContent = valueObject.forradalom
+    tabelrow.appendChild(forradalomCella)
+
+    // Évszám cella létrehozása és hozzáadása
+    const evszamCella = document.createElement('td')
+    evszamCella.textContent = valueObject.evszam
+    tabelrow.appendChild(evszamCella)
+
+    // Sikeres cella létrehozása és hozzáadása
+    const sikerCella = document.createElement('td')
+    sikerCella.textContent = valueObject.sikeres
+    tabelrow.appendChild(sikerCella)
+})
 
 // A divform-ot is hozzáadjuk a containerhez
 divcontainer.appendChild(divform)
