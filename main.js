@@ -81,6 +81,8 @@ for (const fieldElement of fieldList) {
 
     field.appendChild(document.createElement('br')) // Sortörés a label és input közé
 
+
+   
     let input // Input változó deklarálása
 
     if (fieldElement.fieldid === 'sikeres') {
@@ -104,6 +106,11 @@ for (const fieldElement of fieldList) {
 
     field.appendChild(input) // Hozzáadjuk az inputot a mezőhöz
 }
+const error = document.createElement('span') // Hibaüzenet elem létrehozása
+error.className = 'error' // Hibaüzenet class beállítása
+
+field.appendChild(error) // Hozzáadjuk a mezőhöz
+
 
 // Gomb létrehozása és hozzáadása a formhoz
 const button = document.createElement('button')
@@ -124,6 +131,31 @@ form.addEventListener('submit', (e) => {
         valueObject[inputFields.id] = inputFields.value
     }
 
+    let valid = true // Kezdetben érvényesnek tekintjük az űrlapot
+
+
+    for(const inputFields of inputField) {
+
+        const errorfield = inputFields.parentElement.querySelector('.error') // Kiválasztjuk a hibaüzenet mezőt
+        
+
+        if(!errorfield) { // Ha nincs hibaüzenet mező, akkor létrehozzuk
+            console.error('nincs hibaüzenet mező')
+
+            return}
+
+        errorfield.textContent = '' // Üres hibaüzenet
+
+        if (inputFields.value === '') { // Ha az input mező üres
+            errorfield.textContent = 'Kötelező mező' // Hibaüzenet beállítása
+            valid = false // Érvénytelen űrlap
+        }
+
+        valueObject[inputFields.id] = inputFields.value // Az objektum feltöltése az input mező értékével
+    }
+
+    if (!valid) { // Ha az űrlap érvénytelen
+
     // Új sor létrehozása a táblázathoz
     const tabelrow = document.createElement('tr')
     tbody.appendChild(tabelrow)
@@ -142,6 +174,7 @@ form.addEventListener('submit', (e) => {
     const sikerCella = document.createElement('td')
     sikerCella.textContent = valueObject.sikeres
     tabelrow.appendChild(sikerCella)
+    }
 })
 
 // A divform-ot is hozzáadjuk a containerhez
