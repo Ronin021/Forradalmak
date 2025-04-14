@@ -102,10 +102,14 @@ class Table extends Area {
 
 // Form osztály: örökli az Area-t, létrehoz egy űrlapot a megadott mezőkkel
 class Form extends Area {
+    #inputtomb // Privát mező: ide kerülnek a létrehozott Formfield mezők
+    
     constructor(cssClass, fieldList, manager) {
         super(cssClass, manager, fieldList) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
         
 
+
+        this.#inputtomb = [] // Inicializáljuk az input tömböt
         const form = document.createElement('form') // Űrlap elem létrehozása
         this.div.appendChild(form) // Hozzáadjuk a divhez
 
@@ -118,46 +122,12 @@ class Form extends Area {
             ]
         }
 
-        // Végigmegyünk a mezőleírásokon, és mindenhez létrehozunk label + input párost
-        for (const fieldElement of fieldList) {
-            const field = makeDiv('field') // Egyéni mezőtartó div
-            form.appendChild(field)
+        for ( const field of fieldList) { // Végigmegyünk a mezők listáján
+            const formField = new FormField(field.fieldid, field.fieldLabel) // Új FormField objektum létrehozása
+            this.#inputtomb.push(formField) // Hozzáadjuk a tömbhöz
+            form.appendChild(formField.getDiv()) // Hozzáadjuk a formhoz
 
-            const label = document.createElement('label') // Címke
-            label.htmlFor = fieldElement.fieldid
-            label.textContent = fieldElement.fieldLabel
-            field.appendChild(label)
-
-            field.appendChild(document.createElement('br')) // Sortörés
-
-            let input
-            if (fieldElement.fieldid === 'sikeres') {
-                input = document.createElement('select') // Legördülő mező
-                input.id = fieldElement.fieldid
-
-                const optionyes = document.createElement('option')
-                optionyes.value = 'igen'
-                optionyes.innerText = 'igen'
-
-                const optionno = document.createElement('option')
-                optionno.value = 'nem'
-                optionno.innerText = 'nem'
-
-                input.appendChild(optionyes)
-                input.appendChild(optionno)
-            } else {
-                input = document.createElement('input') // Alapértelmezett szövegmező
-                input.id = fieldElement.fieldid
-            }
-
-            field.appendChild(input) // Mező hozzáadása
         }
-
-        const button = document.createElement('button') // Gomb létrehozása
-        button.textContent = 'hozzáadás' // Felirat beállítása
-        form.appendChild(button) // Gomb hozzáadása az űrlaphoz
-
-
         form.addEventListener('submit', (e) => { // Űrlap beküldés eseménykezelő
             e.preventDefault() // Alapértelmezett beküldés megakadályozása
             const valueObject = {} // Üres objektum létrehozása az értékek tárolására
@@ -172,4 +142,74 @@ class Form extends Area {
             
         })
     }
+}
+
+class FormField{
+
+    #id // Privát mező: ide kerül az id
+    #inputMezo // Privát mező: ide kerül az input/select mező
+    #labelElem // Privát mező: ide kerül a label elem
+    #hibaElem // Privát mező: ide kerül a hiba üzenet elem
+
+    get id() {
+        return this.#id // Getter: visszaadja az id-t
+    }
+
+    get value() {
+        return this.#inputMezo.value // Getter: visszaadja az input mező értékét
+    }
+
+    set error(message) {
+        this.#hibaElem.textContent = message // Beállítja a hiba üzenetet
+    }
+
+    constructor(id, labeltext) {
+        this.#id = id // Beállítjuk az id-t
+
+        this.#labelElem = document.createElement('label') // Létrehozzuk a label elemet
+        this.#labelElem.htmlFor = id // Beállítjuk, hogy melyik inputhoz tartozik
+        this.#labelElem.textContent = labeltext // Beállítjuk a címke szövegét
+
+
+        if(id === 'sikeres') { // Ha a mező "sikeres"
+            this.#inputMezo = document.createElement('select') // Legördülő lista
+            const optionyes = document.createElement('option') // "igen" opció
+            optionyes.value = 'igen'
+            optionyes.innerText = 'igen'
+
+            const optionno = document.createElement('option') // "nem" opció
+            optionno.value = 'nem'
+            optionno.innerText = 'nem'
+
+            this.#inputMezo.appendChild(optionyes) // Hozzáadjuk az "igen" opciót
+            this.#inputMezo.appendChild(optionno) // Hozzáadjuk a "nem" opciót
+        } else {
+            this.#inputMezo = document.createElement('input') // Normál input mező
+        
+            this.#inputMezo.id = id // Beállítjuk az id-t
+        }
+
+        this.#hibaElem = document.createElement('span') // Hiba üzenet elem létrehozása
+      
+        this.#hibaElem.className = 'error' // Hiba üzenet class beállítása
+
+
+    }
+
+    getDiv(){
+        const container = makeDiv('field') // Létrehozunk egy új div konténert
+
+        const br_elott = document.createElement('br') // Sortörés a label és input közé
+
+        const br_utan = document.createElement('br') // Sortörés az input és hiba üzenet közé
+
+
+        const elemek = [this.#labelElem, this.#inputMezo, br_elott, this.#hibaElem, br_utan] // Összeállítjuk az elemeket egy tömbbe
+        for (const elem of elemek) { // Végigmegyünk az elemek tömbjén
+            container.appendChild(elem) // Hozzáadjuk a div konténerhez
+        }
+
+        return container // Visszaadjuk a div konténert
+    }
+    
 }
