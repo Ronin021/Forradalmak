@@ -105,11 +105,12 @@ for (const fieldElement of fieldList) {
     }
 
     field.appendChild(input) // Hozzáadjuk az inputot a mezőhöz
-}
 const error = document.createElement('span') // Hibaüzenet elem létrehozása
 error.className = 'error' // Hibaüzenet class beállítása
 
 field.appendChild(error) // Hozzáadjuk a mezőhöz
+}
+
 
 
 // Gomb létrehozása és hozzáadása a formhoz

@@ -3,9 +3,10 @@ const sep = document.createElement('hr')
 
 // Hozzáadjuk a <hr> elemet a body-hoz
 document.body.appendChild(sep)
+const manager = new Manager(); // példányosítjuk a Manager osztályt, ami kezeli az adatokat
 
 // Létrehozunk egy új 'table' class nevű divet az Table osztály segítségével
-const table = new Table('table')
+const tableoop = new Table('table', manager)
 
 const fieldsList = [{ // egy tömb objektumokkal
     fieldid: 'forradalom', // ez lesz az input id-ja
@@ -20,9 +21,8 @@ const fieldsList = [{ // egy tömb objektumokkal
     fieldLabel: 'sikeres' // harmadik mező felirat
 }];
 
-const form = new Form('form', fieldsList); // példányosítjuk a Form osztályt, 'form' class-szal
+const formoop = new Form('form', fieldsList); // példányosítjuk a Form osztályt, 'form' class-szal
 
 
-const manager = new Manager(); // példányosítjuk a Manager osztályt, ami kezeli az adatokat
 
-const Fileupload = new Fileupload('fileupload', manager); // példányosítjuk a Fileupload osztályt, ami kezeli a fájlokat
+const Fileuploadoop = new Fileupload('fileupload', manager); // példányosítjuk a Fileupload osztályt, ami kezeli a fájlokat

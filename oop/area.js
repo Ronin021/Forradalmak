@@ -1,5 +1,5 @@
 // Segédfüggvény: létrehoz egy div-et a megadott osztálynévvel
-function makeDiv(className) {
+function makeDivArea(className) {
     const div = document.createElement('div')
     div.className = className
     return div
@@ -279,7 +279,7 @@ class FormField{
     }
 
     getDiv(){
-        const container = makeDiv('field') // Létrehozunk egy új div konténert
+        const container = makeDivArea('field') // Létrehozunk egy új div konténert
 
         const br_elott = document.createElement('br') // Sortörés a label és input közé
 
