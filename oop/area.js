@@ -128,18 +128,32 @@ class Form extends Area {
             form.appendChild(formField.getDiv()) // Hozzáadjuk a formhoz
 
         }
+
+        const submitButton = document.createElement('button') // Létrehozunk egy gombot
+        submitButton.textContent = 'hozzáadás' // Beállítjuk a gomb szövegét
+
+        form.appendChild(submitButton) // Hozzáadjuk a formhoz
+
         form.addEventListener('submit', (e) => { // Űrlap beküldés eseménykezelő
             e.preventDefault() // Alapértelmezett beküldés megakadályozása
             const valueObject = {} // Üres objektum létrehozása az értékek tárolására
 
-            const inputField = e.target.querySelectorAll('input, select') // Kiválasztjuk az összes input és select mezőt
-            for (const input of inputField) { // Végigmegyünk az összes mezőn
-                valueObject[input.id] = input.value // Az objektumba mentjük az értékeket
-            }
+            let isValid = true // Érvényesség változó inicializálása
 
-            const adat = new Adat(valueObject.forradalom, valueObject.evszam, valueObject.sikeres) // Új Adat objektum létrehozása
-            this.manager.addAdat(adat) // Adat hozzáadása a Managerhez
-            
+            for (const errorfield of this.#inputtomb) { // Végigmegyünk a mezőkön
+                errorfield.error = '' // Töröljük a hibaüzenetet
+                if (errorfield.value === '') { // Ha a mező üres
+                    errorfield.error = 'Kötelező mező!' // Hibaüzenet beállítása
+                    isValid = false // Érvényesség hamisra állítása
+                } else {
+                    valueObject[errorfield.id] = errorfield.value // Beállítjuk az értéket az objektumban
+                }
+            }
+            if (isValid) { // Ha minden mező érvényes
+                const adat = new Adat(valueObject.forradalom, valueObject.evszam, valueObject.sikeres) // Új Adat objektum létrehozása
+
+                this.manager.addAdat(adat) // Hozzáadjuk az adatot a managerhez
+            }
         })
     }
 }
