@@ -21,3 +21,8 @@ const fieldsList = [{ // egy tömb objektumokkal
 }];
 
 const form = new Form('form', fieldsList); // példányosítjuk a Form osztályt, 'form' class-szal
+
+
+const manager = new Manager(); // példányosítjuk a Manager osztályt, ami kezeli az adatokat
+
+const Fileupload = new Fileupload('fileupload', manager); // példányosítjuk a Fileupload osztályt, ami kezeli a fájlokat

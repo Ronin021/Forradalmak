@@ -158,6 +158,51 @@ class Form extends Area {
     }
 }
 
+
+class Fileupload extends Area {
+
+    constructor(cssClass, manager) {
+
+        super(cssClass, manager) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
+        
+        
+        const fileupload = document.createElement('input') // Fájl feltöltés elem létrehozása
+
+        fileupload.type = 'file' // Beállítjuk a típusát fájlra
+        fileupload.id = 'fileupload' // Beállítjuk az id-t
+        this.div.appendChild(fileupload) // Hozzáadjuk a divhez
+
+        fileupload.addEventListener('change', (e) => { // Fájl kiválasztás eseménykezelő
+
+            const selectedFile = e.target.files[0] // Kiválasztott fájl
+            const reader = new FileReader() // Fájl olvasó létrehozása
+
+            reader.onload = () => { // Fájl betöltés eseménykezelő
+
+                const sorok = reader.result.split('\n') // Fájl tartalmának feldolgozása (sorokra bontás)
+
+                const adatossorok = sorok.slice(1) // Az első sort eltávolítjuk (fejléc)
+                for (const sor of adatossorok) { // Végigmegyünk a sorokon
+
+                    const trimmedSor = sor.trim() // Sorok levágása (felesleges szóközök eltávolítása)
+
+                    const felosztottSor = trimmedSor.split(';') // Sorok felosztása (pontosvesszőkel)
+
+                    const adat = new Adat(
+                        felosztottSor[0], // Forradalom neve
+                        Number(felosztottSor[1]), // Évszám, csak szám lehet
+                        felosztottSor[2]  // Sikeres (igen/nem)
+                    )
+
+                    this.manager.addAdat(adat) // Hozzáadjuk az adatot a managerhez
+                }
+            }
+            reader.readAsText(selectedFile) // Fájl olvasása szövegként
+        })
+    }
+}
+
+
 class FormField{
 
     #id // Privát mező: ide kerül az id
