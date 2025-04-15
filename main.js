@@ -179,3 +179,56 @@ form.addEventListener('submit', (e) => {
 
 // A divform-ot is hozzáadjuk a containerhez
 divcontainer.appendChild(divform)
+
+const filefeltolto = document.createElement('input') // Fájl feltöltő input létrehozása
+
+divcontainer.appendChild(filefeltolto) // Hozzáadjuk a containerhez
+
+filefeltolto.id = 'filefeltolto' // Beállítjuk az id-t
+
+filefeltolto.type = 'file' // Beállítjuk, hogy fájl típusú legyen
+
+filefeltolto.addEventListener('change', (e) => { // Eseménykezelő a fájl kiválasztására
+
+    const file = e.target.files[0] // Az első fájl kiválasztása
+    const reader = new FileReader() // Új FileReader létrehozása
+    
+    reader.onload = (e) => { // Eseménykezelő a fájl betöltésére
+        const filecontent = reader.result.split('\n') // A fájl tartalmának feldolgozása (sorokra bontás)
+
+        const withoutheader = filecontent.slice(1) // Az első sort eltávolítjuk (fejléc)
+
+        for (const line of withoutheader) { // Végigmegyünk a sorokon
+            const uressor = line.trim()// Sorok levágása (felesleges szóközök eltávolítása)
+
+            const sor = uressor.split(';') // Sorok feldolgozása (pontosvesszőkel)
+
+            const forradalmak = {
+                forradalom: sor[0], // Forradalom neve
+                evszam: sor[1], // Évszám
+                sikeres: sor[2] // Sikeresség
+            }
+
+            array.push(forradalmak) // Hozzáadjuk a tömbhöz
+
+            const tabelrow = document.createElement('tr') // Új sor létrehozása a táblázathoz
+
+            tbody.appendChild(tabelrow) // Hozzáadjuk a táblázathoz
+
+            const forradalomCella = document.createElement('td') // Forradalom cella létrehozása
+
+            forradalomCella.textContent = forradalmak.forradalom // Cella szövegének beállítása
+            tabelrow.appendChild(forradalomCella) // Cella hozzáadása a sorhoz
+
+            const evszamCella = document.createElement('td') // Évszám cella létrehozása
+            evszamCella.textContent = forradalmak.evszam // Cella szövegének beállítása
+            tabelrow.appendChild(evszamCella) // Cella hozzáadása a sorhoz
+
+            const sikerCella = document.createElement('td') // Sikeres cella létrehozása
+            sikerCella.textContent = forradalmak.sikeres // Cella szövegének beállítása
+            tabelrow.appendChild(sikerCella) // Cella hozzáadása a sorhoz
+}
+        }
+    reader.readAsText(file) // Fájl beolvasása szövegként
+
+})
