@@ -199,7 +199,30 @@ class Fileupload extends Area {
             }
             reader.readAsText(selectedFile) // Fájl olvasása szövegként
         })
-    }
+
+        const letoltesbutton = document.createElement('button') // Letöltés gomb létrehozása
+        letoltesbutton.textContent = 'letöltés' // Gomb szövegének beállítása
+
+        this.div.appendChild(letoltesbutton) // Hozzáadjuk a divhez
+
+
+        letoltesbutton.addEventListener('click', () => { // Gomb kattintás eseménykezelő
+            const link = document.createElement('a') // Új idéglenes link létrehozása
+    
+            const tartalom = this.manager.generateOutputString() // Adatok generálása szövegként
+
+            const blob = new Blob([tartalom]) // Blob létrehozása a szövegből
+
+            link.href = URL.createObjectURL(blob) // Hivatkozás beállítása a blobra
+
+            link.download = 'newdataOop.csv'
+
+            link.click() // Kattintás a letöltéshez
+
+            URL.revokeObjectURL(link.href) // Hivatkozás visszavonása
+        })
+
+        }
 }
 
 

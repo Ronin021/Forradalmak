@@ -253,7 +253,7 @@ letoltesbutton.addEventListener('click', () => { // Eseménykezelő a gomb megny
 
     link.href = URL.createObjectURL(blob) // Hivatkozás beállítása a Blob-ra
 
-    link.download = 'forradalmakdata(in).csv' // Letöltési név beállítása
+    link.download = 'newdata.csv' // Letöltési név beállítása
 
     link.click() // Hivatkozás "megnyomása" (letöltés elindítása)
 
