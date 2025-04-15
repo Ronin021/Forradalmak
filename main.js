@@ -232,3 +232,30 @@ filefeltolto.addEventListener('change', (e) => { // Eseménykezelő a fájl kiv�
     reader.readAsText(file) // Fájl beolvasása szövegként
 
 })
+
+const letoltesbutton = document.createElement('button') // Letöltés gomb létrehozása
+letoltesbutton.textContent = 'letöltés' // Gomb szövegének beállítása
+
+divcontainer.appendChild(letoltesbutton) // Gomb hozzáadása a containerhez
+
+letoltesbutton.addEventListener('click', () => { // Eseménykezelő a gomb megnyomására
+    const link = document.createElement('a') // Új hivatkozás létrehozása
+
+    const letoltesTomb = ['forradalom;evszam;sikeres'] // Letöltési tömb létrehozása
+
+    for (const forradalmak of array) { // Végigmegyünk a tömbön
+        const sor = `${forradalmak.forradalom};${forradalmak.evszam};${forradalmak.sikeres}` // Sor létrehozása
+        letoltesTomb.push(sor) // Sor hozzáadása a letöltési tömbhöz
+    }
+
+    const letoltesString = letoltesTomb.join('\n') // Tömb összefűzése szöveggé (sorokkal elválasztva)
+    const blob = new Blob([letoltesString]) // Blob létrehozása a szövegből
+
+    link.href = URL.createObjectURL(blob) // Hivatkozás beállítása a Blob-ra
+
+    link.download = 'forradalmakdata(in).csv' // Letöltési név beállítása
+
+    link.click() // Hivatkozás "megnyomása" (letöltés elindítása)
+
+    URL.revokeObjectURL(link.href) // Blob URL visszavonása
+})
