@@ -7,17 +7,6 @@ const makeDiv = (className) => {
     return div // Visszaadjuk az elkészített <div>-et
 }
 
-/**
- * @param {Array} adatarray - Az adatok tömbje, amit a táblázatban meg szeretnénk jeleníteni.
- * 
- * @param {Function} callback - A callback függvény, amit új adat hozzáadásakor hívunk meg.
- * 
- * 
- * @returns {Array} - A táblázat adatai a callback szerinti elemekkel.
- */
-
-
-
 // Létrehozunk egy 'container' class nevű divet
 const divcontainer = makeDiv('container')
 
@@ -72,73 +61,6 @@ const form = document.createElement('form')
 
 // A <form>-ot hozzáadjuk a form divhez
 divform.appendChild(form)
-
-
-const filtercontainer = document.createElement('div') // Létrehozunk egy új divet a szűrőkhöz
-filtercontainer.className = 'filtercontainer' // Beállítjuk a class nevét
-divcontainer.appendChild(filtercontainer) // Hozzáadjuk a filtercontainer-t a divcontainer-hez
-
-const filterdivform = document.createElement('div') // Létrehozunk egy új divet a szűrő formhoz
-filterdivform.className = 'filterdivform' // Beállítjuk a class nevét
-filtercontainer.appendChild(filterdivform) // Hozzáadjuk a filterform-ot a filtercontainer-hez
-
-const filterform = document.createElement('form') // Létrehozunk egy új form elemet
-filterdivform.appendChild(filterform) // Hozzáadjuk a filterdivform-hoz
-
-const input = document.createElement('input') // Létrehozunk egy új input elemet
-input.type = 'text' // Beállítjuk az input típusát szövegre
-input.id = 'filterinput' // Beállítjuk az input id-ját
-input.placeholder = 'szűrés' // Beállítjuk az input helyőrző szövegét
-filterform.appendChild(input) // Hozzáadjuk az inputot a filterform-hoz
-
-const select = document.createElement('select') // Létrehozunk egy új select elemet
-
-select.id = 'filterselect' // Beállítjuk a select id-ját
-
-const options = ['üres','forradalom', 'evszam', 'sikeres'] // Létrehozzuk az opciók listáját
-options.forEach((optiontext) => { // Végigmegyünk az opciókon
-    const option = document.createElement('option') // Létrehozunk egy új opciót
-    option.value = optiontext // Beállítjuk az opció értékét
-    option.textContent = optiontext // Beállítjuk az opció szövegét
-    select.appendChild(option) // Hozzáadjuk az opciót a select-hez
-})
-filterform.appendChild(select) // Hozzáadjuk a select-ot a filterform-hoz
-
-
-const filterbutton = document.createElement('button') // Létrehozunk egy új gombot
-filterbutton.type = 'button' // Beállítjuk a gomb típusát
-filterbutton.textContent = 'szűrés' // Beállítjuk a gomb szövegét
-form.appendChild(filterbutton) // Hozzáadjuk a gombot a formhoz
-
-const filterResult = document.createElement('div') // Létrehozunk egy új divet a szűrés eredményének megjelenítésére
-filterResult.className = 'filterResult' // Beállítjuk a class nevét
-filterResult.textContent = 'szűrés eredménye' // Beállítjuk a div szövegét
-filtercontainer.appendChild(filterResult) // Hozzáadjuk a filterResult-t a filtercontainer-hez
-filterbutton.addEventListener('click', () => { // Eseménykezelő a gomb megnyomására
-    const filterinput = document.getElementById('filterinput') // Lekérjük a szűrő inputot
-    const filterselect = document.getElementById('filterselect') // Lekérjük a szűrő selectet
-
-    const filterValue = filterinput.value // Lekérjük a szűrő input értékét
-    const filterSelectValue = filterselect.value // Lekérjük a szűrő select értékét
-
-    if (filterValue === '') { // Ha az input üres
-        return // Kilépünk a függvényből
-    }
-
-    const filteredArray = array.filter((item) => { // Szűrjük az array-t
-        return item[filterSelectValue].toLowerCase().includes(filterValue.toLowerCase()) // Visszaadjuk azokat az elemeket, amik tartalmazzák a szűrő értékét
-    })
-
-    filterResult.innerHTML = '' // Ürítjük a szűrés eredményét
-
-    filteredArray.forEach((item) => { // Végigmegyünk a szűrt elemek listáján
-        const div = document.createElement('div') // Létrehozunk egy új divet
-        div.textContent = `${item.forradalom} (${item.evszam}) - ${item.sikeres}` // Beállítjuk a div szövegét
-        filterResult.appendChild(div) // Hozzáadjuk a divet a szűrés eredményéhez
-    })
-})
-
-
 
 // Mezőket leíró tömb: minden mező egy objektum (id + címke szöveg)
 const fieldList = [
@@ -338,3 +260,71 @@ letoltesbutton.addEventListener('click', () => { // Eseménykezelő a gomb megny
 
     URL.revokeObjectURL(link.href) // Blob URL visszavonása
 })
+/**
+ * Létrehoz egy szűrő űrlapot, amely lehetővé teszi az adatok szűrését.
+ * @param {HTMLDivElement} divcontainer - A szülő div, amelyhez a szűrő űrlapot hozzáadjuk.
+ * @param {HTMLTableSectionElement} tbody - A táblázat törzse, amelyet szűrni fogunk.
+ * @param {Array} array - Az adatok tömbje, amelyet szűrni fogunk.
+ */
+
+const filterFormmaker = (divcontainer, tbody, array) => {
+    // Létrehozunk egy új divet a szűrőhöz
+    const divfilter = makeDiv('filterDiv'); // Új divet hozunk létre a szűrőnek
+    divcontainer.appendChild(divfilter); // A szűrő divet hozzáadjuk a szülő divhez
+
+    // Létrehozunk egy új formot a szűrőhöz
+    const filterForm = document.createElement('form'); // Létrehozunk egy form elemet
+    divfilter.appendChild(filterForm); // Hozzáadjuk a formot a szűrő divhez
+
+    // Létrehozunk egy lenyíló menüt
+    const select = document.createElement('select'); // Létrehozunk egy select elemet
+    filterForm.appendChild(select); // Hozzáadjuk a select-et a formhoz
+
+    // Opciók hozzáadása a lenyíló menühöz
+    const options = [
+        { value: "", innerText: "" }, // Üres érték és szöveg az alapértelmezett lehetőséghez
+        { value: 'forradalom', innerText: 'forradalom' }, // Forradalom opció
+        { value: 'evszam', innerText: 'evszám' }, // Évszám opció
+        { value: 'sikeres', innerText: 'sikeres' } // Sikeres opció
+    ];
+
+    // Végigmegyünk az options tömbön és hozzáadjuk az opciókat a select-hez
+    for (const option of options) {
+        const opt = document.createElement('option'); // Létrehozunk egy új opció elemet
+        opt.value = option.value; // Beállítjuk az opció értékét
+        opt.innerText = option.innerText; // Beállítjuk az opció szövegét
+        select.appendChild(opt); // Hozzáadjuk az opciót a select elemhez
+    }
+
+    // Létrehozunk egy input mezőt a szűrési feltétel megadásához
+    const input = document.createElement('input'); // Új input mezőt hozunk létre
+    input.id = 'filterInput'; // Beállítjuk az input id-ját
+    filterForm.appendChild(input); // Hozzáadjuk az inputot a formhoz
+
+    // Létrehozunk egy gombot, amivel a szűrést elindíthatjuk
+    const button = document.createElement('button'); // Új gombot hozunk létre
+    button.type = 'button'; // Beállítjuk, hogy ne form submit legyen
+    button.innerText = 'szűrés'; // Beállítjuk a gomb szövegét
+    filterForm.appendChild(button); // Hozzáadjuk a gombot a formhoz
+
+    // Eredmény kiíró div létrehozása
+    const resultofdiv = makeDiv('result'); // Létrehozunk egy divet az eredmény kiírásához
+    filterForm.appendChild(resultofdiv); // Hozzáadjuk az eredmény divet a formhoz
+
+    // Gombnyomás esemény
+    button.addEventListener('click', () => { // Eseménykezelő a gombnyomásra
+        const mezo = select.value; // Kiválasztjuk a szűrendő mezőt (select)
+        const keresett = input.value.trim().toLowerCase(); // Kivesszük az input mezőben megadott szöveget és kisbetűssé alakítjuk
+
+        let counter = 0; // Kezdő érték a találatok számának
+        // Végigmegyünk az adatokat tartalmazó tömbön
+        for (const adat of array) {
+            const ertek = (adat[mezo] ?? "").toString().toLowerCase(); // Az adott mező értékét lekérjük és kisbetűssé alakítjuk
+            if (ertek.includes(keresett)) counter++; // Ha a mező értéke tartalmazza a keresett szöveget, növeljük a találatok számát
+        }
+
+        resultofdiv.innerText = `A szűrés eredménye: ${counter} találat`; // Kiírjuk az eredmény div-be a találatok számát
+    });
+};
+
+filterFormmaker(divcontainer, tbody, array) // Szűrő űrlap létrehozása
