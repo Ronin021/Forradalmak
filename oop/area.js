@@ -1,4 +1,8 @@
-// Segédfüggvény: létrehoz egy div-et a megadott osztálynévvel
+/**
+ * Segédfüggvény: létrehoz egy új div elemet a megadott osztálynévvel.
+ * @param {string} className - Az osztálynév, amit a div-nek adunk.
+ * @returns {HTMLDivElement} - A létrehozott div elem.
+ */
 function makeDivArea(className) {
     const div = document.createElement('div')
     div.className = className
@@ -7,22 +11,31 @@ function makeDivArea(className) {
 
 // Area osztály: egy div-et hoz létre, amit hozzáad egy közös 'oopcontainer'-hez
 class Area {
-
+ /** @type {HTMLDivElement} */
     #div // Privát mező: ide kerül a létrehozott div elem
+  
+    /** @type {Manager} */
 
     #manager // Privát mező: ide kerül a Manager példány
+   
+    /** @returns {Manager} */
 
     get manager() {
         return this.#manager // Getter: visszaadja a manager példányt
     }
 
     // Getter: kívülről elérhetővé teszi a privát div-et
+        /** @returns {HTMLDivElement} */
+
     get div(){
         return this.#div
     }
 
 
-
+ /**
+     * @param {string} className - Az osztálynév a div számára.
+     * @param {Manager} manager - A kezelő példány.
+     */
     constructor(className, manager) {
         this.#manager = manager // Beállítjuk a manager példányt
         const container = this.#getContainerdiv() // Lekérjük vagy létrehozzuk a közös konténert
@@ -34,6 +47,11 @@ class Area {
     }
 
     // Privát metódus: visszaadja a közös konténer div-et, vagy létrehozza, ha nem létezik
+
+    /**
+     * Lekéri a közös konténert, ha nem létezik, létrehozza.
+     * @returns {HTMLDivElement}
+     */
     #getContainerdiv(){
         let divcontainer = document.querySelector('.oopcontainer') // Keresés az oldalon
 
@@ -50,6 +68,11 @@ class Area {
 // Table osztály: örökli az Area-t, és létrehoz benne egy táblázatot fejléccel és tbody-val
 class Table extends Area {
 
+
+     /**
+     * @param {string} cssClass - CSS osztály a div számára.
+     * @param {Manager} manager - A kezelő példány.
+     */
     constructor(cssClass, manager) {
         super(cssClass, manager) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
         const tabla = this.#makeTable() // privát metodus meghívása, ami létrehozza a táblázatot
@@ -72,7 +95,10 @@ class Table extends Area {
             row.appendChild(sikerescella) // Hozzáadjuk a sorhoz
         })
     }
-
+/**
+     * Privát metódus: létrehozza a táblázatot fejléccel és tbody-val.
+     * @returns {HTMLTableSectionElement} - A létrehozott tbody.
+     */
 #makeTable() { // Privát metódus: létrehozza a táblázatot
         const table = document.createElement('table') // Létrehozunk egy <table> elemet
         this.div.appendChild(table) // Hozzáadjuk a div-hez
@@ -102,8 +128,17 @@ class Table extends Area {
 
 // Form osztály: örökli az Area-t, létrehoz egy űrlapot a megadott mezőkkel
 class Form extends Area {
+
+        /** @type {FormField[]} */
+
     #inputtomb // Privát mező: ide kerülnek a létrehozott Formfield mezők
     
+
+     /**
+     * @param {string} cssClass - CSS osztály a div számára.
+     * @param {{fieldid: string, fieldLabel: string}[]} fieldList - Mezők listája.
+     * @param {Manager} manager - A kezelő példány.
+     */
     constructor(cssClass, fieldList, manager) {
         super(cssClass, manager, fieldList) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
         
@@ -161,6 +196,11 @@ class Form extends Area {
 
 class Fileupload extends Area {
 
+
+     /**
+     * @param {string} cssClass - CSS osztály.
+     * @param {Manager} manager - Kezelő példány.
+     */
     constructor(cssClass, manager) {
 
         super(cssClass, manager) // Meghívjuk az Area konstruktorát, létrehozva a divet és hozzáadva a containerhez
@@ -228,23 +268,49 @@ class Fileupload extends Area {
 
 class FormField{
 
+
+        /** @type {string} */
+
     #id // Privát mező: ide kerül az id
+    
+        /** @type {HTMLInputElement | HTMLSelectElement} */
+
     #inputMezo // Privát mező: ide kerül az input/select mező
+
+        /** @type {HTMLLabelElement} */
+
     #labelElem // Privát mező: ide kerül a label elem
+
+        /** @type {HTMLSpanElement} */
+
     #hibaElem // Privát mező: ide kerül a hiba üzenet elem
+
+
+        /** @returns {string} */
 
     get id() {
         return this.#id // Getter: visszaadja az id-t
     }
 
+        /** @returns {string} */
+
     get value() {
         return this.#inputMezo.value // Getter: visszaadja az input mező értékét
     }
 
+
+    /**
+     * @param {string} message - A megjelenítendő hibaüzenet.
+     */
     set error(message) {
         this.#hibaElem.textContent = message // Beállítja a hiba üzenetet
     }
 
+
+     /**
+     * @param {string} id - A mező azonosítója.
+     * @param {string} labeltext - A címke szövege.
+     */
     constructor(id, labeltext) {
         this.#id = id // Beállítjuk az id-t
 
@@ -278,6 +344,11 @@ class FormField{
 
     }
 
+
+    /**
+     * Visszaadja az egész mezőt tartalmazó div konténert.
+     * @returns {HTMLDivElement}
+     */
     getDiv(){
         const container = makeDivArea('field') // Létrehozunk egy új div konténert
 
