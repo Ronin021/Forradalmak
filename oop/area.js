@@ -4,9 +4,9 @@
  * @returns {HTMLDivElement} - A létrehozott div elem.
  */
 function createDivWithClass(className) {
-    const div = document.createElement('div'); // Létrehozunk egy új div elemet
-    div.className = className; // Beállítjuk a div osztálynevét
-    return div; // Visszaadjuk a létrehozott div-et
+    const div = document.createElement('div'); // Létrehozunk egy új <div> elemet
+    div.className = className; // Beállítjuk a div osztálynevét a megadott paraméter alapján
+    return div; // Visszaadjuk a létrehozott div elemet
 }
 
 /**
@@ -149,33 +149,36 @@ class Form extends Area {
             form.appendChild(field.getDiv());
         });
 
-        const submitButton = document.createElement('button'); // Gomb létrehozása
-        submitButton.textContent = 'hozzáadás';
-        form.appendChild(submitButton);
+        // Gomb létrehozása az űrlap beküldéséhez
+        const submitButton = document.createElement('button'); // Létrehozunk egy <button> elemet
+        submitButton.textContent = 'hozzáadás'; // Beállítjuk a gomb szövegét
+        form.appendChild(submitButton); // Hozzáadjuk a gombot az űrlaphoz
 
-        // Beküldés eseménykezelő
+        // Beküldés eseménykezelő hozzáadása az űrlaphoz
         form.addEventListener('submit', (e) => {
-            e.preventDefault();
-            const valueObject = {};
-            let isValid = true;
+            e.preventDefault(); // Megakadályozzuk az alapértelmezett beküldési viselkedést (pl. az oldal újratöltését)
+            const valueObject = {}; // Létrehozunk egy objektumot az űrlap mezőinek értékeinek tárolására
+            let isValid = true; // Inicializáljuk az érvényességi állapotot
 
+            // Végigmegyünk az összes mezőn, és ellenőrizzük az értéküket
             this.#fields.forEach((field) => {
-                field.error = ''; // Hibaüzenet törlése
-                if (!field.value) {
-                    field.error = 'Kötelező mező!';
-                    isValid = false;
+                field.error = ''; // Töröljük az esetleges korábbi hibaüzeneteket
+                if (!field.value) { // Ha a mező értéke üres
+                    field.error = 'Kötelező mező!'; // Beállítjuk a hibaüzenetet
+                    isValid = false; // Az űrlap nem érvényes
                 } else {
-                    valueObject[field.id] = field.value;
+                    valueObject[field.id] = field.value; // Hozzáadjuk a mező értékét az objektumhoz
                 }
             });
 
+            // Ha az űrlap érvényes, létrehozunk egy új Adat objektumot
             if (isValid) {
                 const adat = new Adat(
-                    valueObject.forradalom,
-                    Number(valueObject.evszam),
-                    valueObject.sikeres
+                    valueObject.forradalom, // A forradalom neve
+                    Number(valueObject.evszam), // Az évszám (számmá alakítva)
+                    valueObject.sikeres // A sikeresség értéke
                 );
-                this.manager.addAdat(adat);
+                this.manager.addAdat(adat); // Hozzáadjuk az új Adat objektumot a Manager példányhoz
             }
         });
     }
@@ -193,38 +196,43 @@ class Fileupload extends Area {
     constructor(cssClass, manager) {
         super(cssClass, manager); // Meghívjuk az Area konstruktorát
 
-        const fileInput = document.createElement('input'); // Fájl input létrehozása
-        fileInput.type = 'file';
-        this.div.appendChild(fileInput);
+        // Fájl input létrehozása
+        const fileInput = document.createElement('input'); // Létrehozunk egy <input> elemet
+        fileInput.type = 'file'; // Beállítjuk az input típusát fájl feltöltésre
+        this.div.appendChild(fileInput); // Hozzáadjuk az inputot a div-hez
 
+        // Eseménykezelő a fájl kiválasztásához
         fileInput.addEventListener('change', (e) => {
-            const file = e.target.files[0];
-            const reader = new FileReader();
+            const file = e.target.files[0]; // Lekérjük a kiválasztott fájlt
+            const reader = new FileReader(); // Létrehozunk egy FileReader példányt a fájl olvasásához
 
+            // Fájl betöltésekor végrehajtandó műveletek
             reader.onload = () => {
-                const rows = reader.result.split('\n').slice(1);
+                const rows = reader.result.split('\n').slice(1); // A fájl tartalmát sorokra bontjuk, és kihagyjuk az első sort (fejléc)
                 rows.forEach((row) => {
-                    const [forradalom, evszam, sikeres] = row.split(';');
-                    const adat = new Adat(forradalom, Number(evszam), sikeres);
-                    this.manager.addAdat(adat);
+                    const [forradalom, evszam, sikeres] = row.split(';'); // A sort mezőkre bontjuk pontosvessző alapján
+                    const adat = new Adat(forradalom, Number(evszam), sikeres); // Létrehozunk egy új Adat objektumot
+                    this.manager.addAdat(adat); // Hozzáadjuk az Adat objektumot a Manager példányhoz
                 });
             };
 
-            reader.readAsText(file);
+            reader.readAsText(file); // A fájlt szövegként olvassuk be
         });
 
-        const downloadButton = document.createElement('button'); // Letöltés gomb
-        downloadButton.textContent = 'letöltés';
-        this.div.appendChild(downloadButton);
+        // Letöltés gomb létrehozása
+        const downloadButton = document.createElement('button'); // Létrehozunk egy <button> elemet
+        downloadButton.textContent = 'letöltés'; // Beállítjuk a gomb szövegét
+        this.div.appendChild(downloadButton); // Hozzáadjuk a gombot a div-hez
 
+        // Eseménykezelő a letöltés gombhoz
         downloadButton.addEventListener('click', () => {
-            const content = this.manager.generateOutputString();
-            const blob = new Blob([content]);
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'newdataOop.csv';
-            link.click();
-            URL.revokeObjectURL(link.href);
+            const content = this.manager.generateOutputString(); // Lekérjük a Manager által generált tartalmat
+            const blob = new Blob([content]); // Létrehozunk egy Blob objektumot a tartalommal
+            const link = document.createElement('a'); // Létrehozunk egy <a> elemet
+            link.href = URL.createObjectURL(blob); // Beállítjuk a letöltési URL-t
+            link.download = 'newdataOop.csv'; // Beállítjuk a letöltendő fájl nevét
+            link.click(); // Kattintást szimulálunk a letöltés elindításához
+            URL.revokeObjectURL(link.href); // Felszabadítjuk az URL-t
         });
     }
 }
@@ -234,16 +242,16 @@ class Fileupload extends Area {
  */
 class FormField {
     /** @type {string} */
-    #id;
+    #id; // Privát mező: a mező azonosítója
 
     /** @type {HTMLInputElement | HTMLSelectElement} */
-    #input;
+    #input; // Privát mező: az input vagy select elem
 
     /** @type {HTMLLabelElement} */
-    #label;
+    #label; // Privát mező: a mező címkéje
 
     /** @type {HTMLSpanElement} */
-    #errorSpan;
+    #errorSpan; // Privát mező: a hibaüzenet megjelenítésére szolgáló span elem
 
     /**
      * Konstruktor: létrehoz egy új `FormField` példányt.
@@ -251,27 +259,27 @@ class FormField {
      * @param {string} labelText - A címke szövege.
      */
     constructor(id, labelText) {
-        this.#id = id;
+        this.#id = id; // Beállítjuk a mező azonosítóját
 
-        this.#label = document.createElement('label');
-        this.#label.htmlFor = id;
-        this.#label.textContent = labelText;
+        this.#label = document.createElement('label'); // Létrehozunk egy <label> elemet
+        this.#label.htmlFor = id; // Beállítjuk a címke `for` attribútumát az azonosítóra
+        this.#label.textContent = labelText; // Beállítjuk a címke szövegét
 
-        if (id === 'sikeres') {
-            this.#input = document.createElement('select');
-            ['igen', 'nem'].forEach((value) => {
-                const option = document.createElement('option');
-                option.value = value;
-                option.textContent = value;
-                this.#input.appendChild(option);
+        if (id === 'sikeres') { // Ha a mező azonosítója 'sikeres'
+            this.#input = document.createElement('select'); // Létrehozunk egy <select> elemet
+            ['igen', 'nem'].forEach((value) => { // Hozzáadjuk az opciókat a select elemhez
+                const option = document.createElement('option'); // Létrehozunk egy <option> elemet
+                option.value = value; // Beállítjuk az opció értékét
+                option.textContent = value; // Beállítjuk az opció szövegét
+                this.#input.appendChild(option); // Hozzáadjuk az opciót a select elemhez
             });
-        } else {
-            this.#input = document.createElement('input');
-            this.#input.id = id;
+        } else { // Ha a mező nem 'sikeres'
+            this.#input = document.createElement('input'); // Létrehozunk egy <input> elemet
+            this.#input.id = id; // Beállítjuk az input azonosítóját
         }
 
-        this.#errorSpan = document.createElement('span');
-        this.#errorSpan.className = 'error';
+        this.#errorSpan = document.createElement('span'); // Létrehozunk egy <span> elemet a hibaüzenethez
+        this.#errorSpan.className = 'error'; // Beállítjuk a span osztálynevét 'error'-ra
     }
 
     /**
@@ -279,7 +287,7 @@ class FormField {
      * @returns {string}
      */
     get id() {
-        return this.#id;
+        return this.#id; // Visszaadjuk a mező azonosítóját
     }
 
     /**
@@ -287,7 +295,7 @@ class FormField {
      * @returns {string}
      */
     get value() {
-        return this.#input.value;
+        return this.#input.value; // Visszaadjuk az input vagy select elem értékét
     }
 
     /**
@@ -295,7 +303,7 @@ class FormField {
      * @param {string} message - A hibaüzenet.
      */
     set error(message) {
-        this.#errorSpan.textContent = message;
+        this.#errorSpan.textContent = message; // Beállítjuk a hibaüzenet szövegét
     }
 
     /**
@@ -303,11 +311,11 @@ class FormField {
      * @returns {HTMLDivElement}
      */
     getDiv() {
-        const container = createDivWithClass('field');
-        container.appendChild(this.#label);
-        container.appendChild(this.#input);
-        container.appendChild(this.#errorSpan);
-        return container;
+        const container = createDivWithClass('field'); // Létrehozunk egy div elemet a mező számára
+        container.appendChild(this.#label); // Hozzáadjuk a címkét a div-hez
+        container.appendChild(this.#input); // Hozzáadjuk az input vagy select elemet a div-hez
+        container.appendChild(this.#errorSpan); // Hozzáadjuk a hibaüzenet span elemet a div-hez
+        return container; // Visszaadjuk a mezőt tartalmazó div-et
     }
 }
 

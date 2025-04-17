@@ -12,7 +12,7 @@ const makeDiv = (className) => {
 /**
  * Táblázatot hoz létre a megadott konténerben, és meghív egy callback függvényt a táblázat törzsével.
  * @param {HTMLElement} divcontainer - A szülő div, amelyhez a táblázatot hozzáadjuk.
- * @param {Function} callback - Callback függvény, amit a táblázat törzsével hívunk meg.
+ * @param {function (HTMLElement):void} callback - A callback függvény, amely a táblázat törzsét kapja meg paraméterként.
  */
 const createTabla = (divcontainer, callback) => {
     const tablediv = makeDiv('table'); // Táblázatot tartalmazó div létrehozása
@@ -41,8 +41,8 @@ const createTabla = (divcontainer, callback) => {
 
 /**
  * Új sort ad hozzá a táblázat törzséhez a megadott adatok alapján.
- * @param {HTMLElement} tbody - A táblázat törzse.
- * @param {Object} valueObject - Az új sor adatai.
+ * @param {HTMLElement} tbody - A táblázat törzse, amelyhez a sort hozzáadjuk.
+ * @param {Forradalom} valueObject - Az új sor adatai itt jelennek meg.
  */
 const sorHozzaadas = (tbody, valueObject) => {
     const tabelrow = document.createElement('tr'); // Új sor létrehozása
@@ -57,9 +57,9 @@ const sorHozzaadas = (tbody, valueObject) => {
 
 /**
  * Fájl feltöltési funkciót biztosít, amely a fájl tartalmát hozzáadja a táblázathoz és a tömbhöz.
- * @param {HTMLElement} tbody - A táblázat törzse.
- * @param {HTMLElement} divcontainer - A szülő div.
- * @param {Array} array - Az adatok tömbje.
+ * @param {HTMLElement} tbody - A táblázat törzse, amelyhez a sorokat hozzáadjuk.
+ * @param {HTMLElement} divcontainer - A szülő div, amelyhez a fájl feltöltő inputot hozzáadjuk.
+ * @param {array[]} array - Az adatok tömbje, amelyhez a fájl tartalmát hozzáadjuk.
  */
 const fajlUploader = (tbody, divcontainer, array) => {
     const filefeltolto = document.createElement('input'); // Fájl feltöltő input létrehozása
@@ -87,9 +87,9 @@ const fajlUploader = (tbody, divcontainer, array) => {
 
 /**
  * Űrlapot hoz létre új adatok hozzáadásához.
- * @param {HTMLElement} divcontainer - A szülő div.
- * @param {HTMLElement} tbody - A táblázat törzse.
- * @param {Array} array - Az adatok tömbje.
+ * @param {HTMLElement} divcontainer - A szülő div, amelyhez az űrlapot hozzáadjuk.
+ * @param {HTMLElement} tbody - A táblázat törzse, amelyhez a sorokat hozzáadjuk.
+ * @param {array[]} array - Az adatok tömbje, amelyhez az új adatokat hozzáadjuk.
  */
 const createForm = (divcontainer, tbody, array) => {
     const divform = makeDiv('form'); // Űrlapot tartalmazó div létrehozása
@@ -160,6 +160,12 @@ const createForm = (divcontainer, tbody, array) => {
     });
 };
 
+
+/**
+ * 
+ * @param {HTMLElement} containerdiv - A szülő div, amelyhez a letöltés gombot hozzáadjuk. 
+ * @param {{forradalom:String, evszam:string, sikeres:string}[]} array 
+ */
 const fajlLetoltesSima = (containerdiv, array) => {
     const letoltesbutton = document.createElement('button'); // Letöltés gomb létrehozása
     letoltesbutton.textContent = 'letöltés'; // Gomb szövege
@@ -177,7 +183,12 @@ const fajlLetoltesSima = (containerdiv, array) => {
         URL.revokeObjectURL(link.href); // URL felszabadítása
     });
 };
-
+/**
+ * 
+ * @param {HTMLElement} divcontainer - A szülő div, amelyhez a szűrő elemeket hozzáadjuk.
+ * @param {HTMLElement} tbody - A táblázat törzse, amelyhez a szűrő eredményét hozzáadjuk.
+ * @param {array[]} array - Az adatok tömbje, amelyet a táblázatban megjelenítünk.
+ */
 const filterFormmaker = (divcontainer, tbody, array) => {
     const divfilter = makeDiv('filterDiv'); // Szűrő div létrehozása
     divcontainer.appendChild(divfilter); // Div hozzáadása a szülő div-hez
