@@ -1,4 +1,9 @@
 // Adatok tárolására szolgáló tömb
+/**
+ * @typedef {{forradalom:string, evszam:string, sikeres:string}} Forradalom
+ * 
+ * @type {Forradalom[]}
+ */
 const array = [];
 
 // Fő konténer létrehozása
