@@ -26,3 +26,5 @@ const formoop = new Form('form', fieldsList); // példányosítjuk a Form osztá
 
 
 const Fileuploadoop = new Fileupload('fileupload', manager); // példányosítjuk a Fileupload osztályt, ami kezeli a fájlokat
+
+const filteroop = new Filter('filter', manager); // példányosítjuk a Filter osztályt, ami kezeli a szűrést
