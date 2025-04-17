@@ -1,10 +1,19 @@
-// Adatok tárolására szolgáló tömb (a main.js-ben definiált array-t használja)
+/**
+ * Létrehoz egy új div elemet a megadott osztálynévvel.
+ * @param {string} className - Az osztálynév, amit a div-nek adunk.
+ * @returns {HTMLDivElement} - A létrehozott div elem.
+ */
 const makeDiv = (className) => {
     const div = document.createElement('div'); // Új <div> elem létrehozása
     div.className = className; // Osztálynév beállítása
     return div; // Visszatér a létrehozott <div> elemmel
 };
 
+/**
+ * Táblázatot hoz létre a megadott konténerben, és meghív egy callback függvényt a táblázat törzsével.
+ * @param {HTMLElement} divcontainer - A szülő div, amelyhez a táblázatot hozzáadjuk.
+ * @param {Function} callback - Callback függvény, amit a táblázat törzsével hívunk meg.
+ */
 const createTabla = (divcontainer, callback) => {
     const tablediv = makeDiv('table'); // Táblázatot tartalmazó div létrehozása
     divcontainer.appendChild(tablediv); // Hozzáadás a szülő div-hez
@@ -30,6 +39,11 @@ const createTabla = (divcontainer, callback) => {
     callback(tableBody); // Callback függvény meghívása a törzzsel
 };
 
+/**
+ * Új sort ad hozzá a táblázat törzséhez a megadott adatok alapján.
+ * @param {HTMLElement} tbody - A táblázat törzse.
+ * @param {Object} valueObject - Az új sor adatai.
+ */
 const sorHozzaadas = (tbody, valueObject) => {
     const tabelrow = document.createElement('tr'); // Új sor létrehozása
     tbody.appendChild(tabelrow); // Sor hozzáadása a táblázat törzséhez
@@ -41,6 +55,12 @@ const sorHozzaadas = (tbody, valueObject) => {
     }
 };
 
+/**
+ * Fájl feltöltési funkciót biztosít, amely a fájl tartalmát hozzáadja a táblázathoz és a tömbhöz.
+ * @param {HTMLElement} tbody - A táblázat törzse.
+ * @param {HTMLElement} divcontainer - A szülő div.
+ * @param {Array} array - Az adatok tömbje.
+ */
 const fajlUploader = (tbody, divcontainer, array) => {
     const filefeltolto = document.createElement('input'); // Fájl feltöltő input létrehozása
     filefeltolto.type = 'file'; // Input típusa: fájl
@@ -65,6 +85,12 @@ const fajlUploader = (tbody, divcontainer, array) => {
     });
 };
 
+/**
+ * Űrlapot hoz létre új adatok hozzáadásához.
+ * @param {HTMLElement} divcontainer - A szülő div.
+ * @param {HTMLElement} tbody - A táblázat törzse.
+ * @param {Array} array - Az adatok tömbje.
+ */
 const createForm = (divcontainer, tbody, array) => {
     const divform = makeDiv('form'); // Űrlapot tartalmazó div létrehozása
     divcontainer.appendChild(divform); // Div hozzáadása a szülő div-hez

@@ -1,4 +1,5 @@
-class Manager { // A Manager osztály az Adat objektumokat kezeli
+class Manager { 
+    // A Manager osztály az Adat objektumokat kezeli
 
     // Privát mezők
 
@@ -15,7 +16,7 @@ class Manager { // A Manager osztály az Adat objektumokat kezeli
      * Létrehoz egy új Manager példányt, üres Adat tömbbel.
      */
     constructor() {
-        this.#array = [];
+        this.#array = []; // Inicializáljuk az üres tömböt az Adat objektumok tárolására
     }
 
     /**
@@ -23,7 +24,7 @@ class Manager { // A Manager osztály az Adat objektumokat kezeli
      * @param {(adat: Adat) => void} callback - A callback függvény, amely az új Adat példányt kapja meg paraméterként.
      */
     setAddAdatCallback(callback) {
-        this.#addAdatCallback = callback;
+        this.#addAdatCallback = callback; // Beállítjuk a callback függvényt
     }
 
     /**
@@ -47,13 +48,15 @@ class Manager { // A Manager osztály az Adat objektumokat kezeli
 
     /**
      * Szűrjük a tárolt Adat objektumokat a megadott callback függvény alapján.
-     * @param {Function} callback - A callback függvény, amely a szűrési feltételt határozza meg.
+     * @param {(adat: Adat) => boolean} callback - A callback függvény, amely a szűrési feltételt határozza meg.
+     * A callback függvény egy `Adat` objektumot kap paraméterként, és egy logikai értéket ad vissza.
      */
     filterOOP(callback) {
         const filteredArray = []; // Szűrt Adat objektumokat tartalmazó tömb
-        for (const adat of this.#array) {
-            if (callback(adat)) {
-                filteredArray.push(adat); // Ha a callback függvény igazat ad vissza, akkor hozzáadjuk a szűrt tömbhöz
+        for (let i = 0; i < this.#array.length; i++) { // Végigmegyünk az összes Adat objektumon
+            const adat = this.#array[i]; // Az aktuális Adat objektum
+            if (callback(adat)) { // Ha a callback függvény igazat ad vissza
+                filteredArray.push(adat); // Hozzáadjuk a szűrt tömbhöz
             }
         }
         if (this.#RenderOOP) {
@@ -69,9 +72,14 @@ class Manager { // A Manager osztály az Adat objektumokat kezeli
      */
     counter(field, value) {
         const keresett = value.trim().toLowerCase(); // Keresett érték kisbetűsítve
-        return this.#array.filter(adat => {
+        let count = 0; // Találatok száma
+        for (let i = 0; i < this.#array.length; i++) { // Végigmegyünk az összes Adat objektumon
+            const adat = this.#array[i]; // Az aktuális Adat objektum
             const fieldValue = adat[field]?.toString().toLowerCase() ?? ''; // Mező értéke kisbetűsítve
-            return fieldValue.includes(keresett); // Ellenőrizzük, hogy tartalmazza-e a keresett értéket
-        }).length; // Visszaadjuk a találatok számát
+            if (fieldValue.includes(keresett)) { // Ellenőrizzük, hogy tartalmazza-e a keresett értéket
+                count++; // Növeljük a találatok számát
+            }
+        }
+        return count; // Visszaadjuk a találatok számát
     }
 }

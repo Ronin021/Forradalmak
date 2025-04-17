@@ -137,10 +137,15 @@ class Form extends Area {
         const form = document.createElement('form'); // Űrlap létrehozása
         this.div.appendChild(form); // Hozzáadjuk a div-hez
 
-        // Mezők létrehozása
+        // Mezők létrehozása a fieldList alapján
         fieldList.forEach(({ fieldid, fieldLabel }) => {
+            // Létrehozunk egy új FormField példányt a mező azonosítójával és címkéjével
             const field = new FormField(fieldid, fieldLabel);
+
+            // Hozzáadjuk a mezőt a privát mezők tömbjéhez
             this.#fields.push(field);
+
+            // Hozzáadjuk a mezőt a formhoz
             form.appendChild(field.getDiv());
         });
 
