@@ -202,7 +202,7 @@ const filterFormmaker = (divcontainer, tbody, array) => {
     ['', 'forradalom', 'evszam', 'sikeres'].forEach(value => {
         const option = document.createElement('option'); // Opció létrehozása
         option.value = value; // Opció értéke
-        option.innerText = value; // Opció szövege
+        option.innerText = value ; // Opció szövege
         select.appendChild(option); // Opció hozzáadása a select-hez
     });
 
@@ -221,9 +221,20 @@ const filterFormmaker = (divcontainer, tbody, array) => {
     button.addEventListener('click', () => {
         const mezo = select.value; // Kiválasztott mező
         const keresett = input.value.trim().toLowerCase(); // Keresett érték
-        const counter = array.filter(adat =>
-            (adat[mezo] ?? '').toString().toLowerCase().includes(keresett)
-        ).length; // Találatok száma
-        resultofdiv.innerText = `A szűrés eredménye: ${counter} találat`; // Eredmény megjelenítése
+
+        if (!mezo) {
+            resultofdiv.innerText = 'Kérlek, válassz egy mezőt a szűréshez!';
+            return;
+        }
+
+        // Szűrési logika a Manager osztályhoz hasonlóan
+        const filteredArray = array.filter(adat => {
+            const fieldValue = adat[mezo]?.toString().toLowerCase() ?? ''; // Mező értéke kisbetűsítve
+            return fieldValue.includes(keresett); // Ellenőrizzük, hogy tartalmazza-e a keresett értéket
+        });
+
+
+        // Eredmény megjelenítése
+        resultofdiv.innerText = `A szűrés eredménye: ${filteredArray.length} találat`;
     });
 };
