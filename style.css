@@ -1,0 +1,163 @@
+/* Alapvető stílusok */
+body {
+    font-family: 'Arial', sans-serif; /* Betűtípus beállítása */
+    background: linear-gradient(120deg, #1e3a8a, #3b82f6); /* Háttér színátmenet */
+    color: #000000; /* Alapértelmezett betűszín fekete */
+    margin: 0; /* Külső margó eltávolítása */
+    padding: 0; /* Belső margó eltávolítása */
+    display: flex; /* Flexbox használata a tartalom elrendezéséhez */
+    flex-direction: column; /* A tartalom függőlegesen rendezése */
+    align-items: center; /* Tartalom középre igazítása vízszintesen */
+    justify-content: center; /* Tartalom középre igazítása függőlegesen */
+    min-height: 100vh; /* A teljes képernyő magasságának lefedése */
+}
+
+/* Táblázat stílusok */
+table {
+    width: 90%; /* Táblázat szélessége a szülő elem 90%-a */
+    max-width: 800px; /* Maximális szélesség 800px */
+    margin: 20px auto; /* Középre igazítás és külső margó */
+    border-collapse: collapse; /* Táblázat cellák közötti határok eltüntetése */
+    background: #ffffff; /* Táblázat háttérszíne fehér */
+    border-radius: 8px; /* Lekerekített sarkok */
+    overflow: hidden; /* Tartalom túlcsordulásának elrejtése */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Árnyék hozzáadása */
+}
+
+thead {
+    background: #2563eb; /* Fejléc háttérszíne */
+    color: #ffffff; /* Fejléc szöveg színe fehér */
+    text-transform: uppercase; /* Szöveg nagybetűssé alakítása */
+    font-weight: bold; /* Félkövér szöveg */
+}
+
+thead th {
+    padding: 12px; /* Belső margó a cellákban */
+    text-align: left; /* Szöveg igazítása balra */
+}
+
+tbody tr:nth-child(even) {
+    background: #f3f4f6; /* Páros sorok háttérszíne */
+}
+
+tbody tr:hover {
+    background: #93c5fd; /* Sor kiemelése hover állapotban */
+    cursor: pointer; /* Mutató kurzor hover állapotban */
+    transition: background 0.3s ease; /* Áttűnés animáció */
+}
+
+td, th {
+    padding: 10px; /* Belső margó a cellákban */
+    border: 1px solid #d1d5db; /* Cellák közötti szegély */
+    color: #000000; /* Cellák szövegének színe fekete */
+}
+
+/* Űrlap stílusok */
+form {
+    width: 90%; /* Űrlap szélessége a szülő elem 90%-a */
+    max-width: 600px; /* Maximális szélesség 600px */
+    margin: 20px auto; /* Középre igazítás és külső margó */
+    padding: 20px; /* Belső margó */
+    background: #ffffff; /* Űrlap háttérszíne fehér */
+    border-radius: 8px; /* Lekerekített sarkok */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Árnyék hozzáadása */
+}
+
+.field {
+    margin-bottom: 15px; /* Margó az egyes mezők között */
+}
+
+label {
+    display: block; /* Blokk szintű elem */
+    margin-bottom: 5px; /* Margó a címke alatt */
+    font-weight: bold; /* Félkövér szöveg */
+    color: #000000; /* Címkék szövegének színe fekete */
+}
+
+input, select {
+    width: 100%; /* Mezők szélessége a szülő elem 100%-a */
+    padding: 10px; /* Belső margó */
+    border: 2px solid #d1d5db; /* Szegély színe és vastagsága */
+    border-radius: 4px; /* Lekerekített sarkok */
+    font-size: 14px; /* Betűméret */
+    outline: none; /* Külső keret eltávolítása fókusz esetén */
+    transition: border-color 0.3s ease; /* Szegély színének animációja */
+    color: #000000; /* Mezők szövegének színe fekete */
+}
+
+input:focus, select:focus {
+    border-color: #2563eb; /* Szegély színe fókusz esetén */
+    box-shadow: 0 0 5px rgba(37, 99, 235, 0.5); /* Árnyék fókusz esetén */
+}
+
+.error {
+    color: #ef4444; /* Hibaüzenet színe piros */
+    font-size: 12px; /* Hibaüzenet betűmérete */
+    margin-top: 5px; /* Margó a hibaüzenet felett */
+}
+
+/* Gomb stílusok */
+button {
+    display: inline-block; /* Gomb blokk szintű megjelenítése */
+    padding: 10px 20px; /* Belső margó */
+    background: #2563eb; /* Gomb háttérszíne */
+    color: #ffffff; /* Gomb szövegének színe fehér */
+    border: none; /* Szegély eltávolítása */
+    border-radius: 4px; /* Lekerekített sarkok */
+    font-size: 14px; /* Betűméret */
+    font-weight: bold; /* Félkövér szöveg */
+    cursor: pointer; /* Mutató kurzor */
+    transition: background 0.3s ease, transform 0.2s ease; /* Animáció hover állapotban */
+}
+
+button:hover {
+    background: #1d4ed8; /* Gomb háttérszíne hover állapotban */
+    transform: translateY(-2px); /* Gomb enyhe kiemelése hover állapotban */
+}
+
+button:active {
+    background: #1e3a8a; /* Gomb háttérszíne aktív állapotban */
+    transform: translateY(0); /* Gomb visszaállítása aktív állapotban */
+}
+
+/* Szűrő div stílusok */
+.filterDiv {
+    width: 90%; /* Szűrő div szélessége a szülő elem 90%-a */
+    max-width: 600px; /* Maximális szélesség 600px */
+    margin: 20px auto; /* Középre igazítás és külső margó */
+    padding: 15px; /* Belső margó */
+    background: #f3f4f6; /* Szűrő div háttérszíne */
+    border: 2px solid #d1d5db; /* Szegély színe és vastagsága */
+    border-radius: 8px; /* Lekerekített sarkok */
+    text-align: center; /* Szöveg középre igazítása */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Árnyék hozzáadása */
+    color: #000000; /* Szűrő div szövegének színe fekete */
+}
+
+/* Letöltés gomb */
+button.download {
+    background: #10b981; /* Letöltés gomb háttérszíne */
+}
+
+button.download:hover {
+    background: #059669; /* Letöltés gomb hover állapotban */
+}
+
+button.download:active {
+    background: #047857; /* Letöltés gomb aktív állapotban */
+}
+
+/* Reszponzív stílusok */
+@media (max-width: 768px) {
+    table, form, .filterDiv {
+        width: 95%; /* Szélesség kisebb képernyőkön */
+    }
+
+    td, th {
+        font-size: 12px; /* Cellák betűmérete kisebb képernyőkön */
+    }
+
+    input, select, button {
+        font-size: 12px; /* Mezők és gombok betűmérete kisebb képernyőkön */
+    }
+}
